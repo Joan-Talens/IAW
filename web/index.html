@@ -1,2 +1,529 @@
-<h1>Proyecto de joan - RA1</h1>
-<h1>DIA 1</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Joan Talens | ASIR - Docker</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #050816;
+            --card: rgba(15, 23, 42, 0.72);
+            --border: rgba(56, 189, 248, 0.2);
+            --primary: #38bdf8;
+            --secondary: #818cf8;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.13), transparent 30%),
+                radial-gradient(circle at 85% 80%, rgba(129, 140, 248, 0.14), transparent 30%),
+                var(--bg);
+            overflow-x: hidden;
+        }
+
+        /* Fondo futurista */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.18;
+            background-image:
+                linear-gradient(rgba(56,189,248,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56,189,248,0.08) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: linear-gradient(to bottom, black, transparent);
+        }
+
+        /* Luces decorativas */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb.one {
+            width: 280px;
+            height: 280px;
+            background: rgba(14, 165, 233, 0.16);
+            top: -100px;
+            left: -80px;
+        }
+
+        .orb.two {
+            width: 320px;
+            height: 320px;
+            background: rgba(99, 102, 241, 0.13);
+            right: -100px;
+            bottom: -120px;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: min(1100px, 90%);
+            margin: auto;
+        }
+
+        /* NAVBAR */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 28px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 12px #22c55e;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 560px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 70px 0 90px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 15px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            background: rgba(15, 23, 42, 0.55);
+            color: var(--primary);
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            backdrop-filter: blur(12px);
+        }
+
+        h1 {
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            line-height: 0.95;
+            letter-spacing: -4px;
+            margin-bottom: 28px;
+        }
+
+        h1 span {
+            background: linear-gradient(
+                90deg,
+                #ffffff,
+                var(--primary),
+                var(--secondary),
+                #ffffff
+            );
+            background-size: 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradient 7s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0%;
+            }
+
+            50% {
+                background-position: 100%;
+            }
+
+            100% {
+                background-position: 0%;
+            }
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            line-height: 1.7;
+            max-width: 650px;
+            margin: auto;
+        }
+
+        .subtitle strong {
+            color: #e2e8f0;
+        }
+
+        /* CARDS */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding-bottom: 70px;
+        }
+
+        .card {
+            padding: 30px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--card);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            transition: 0.35s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: var(--primary);
+            opacity: 0.08;
+            filter: blur(40px);
+            top: -50px;
+            right: -50px;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(56, 189, 248, 0.5);
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(56, 189, 248, 0.08);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 20px;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--primary);
+            font-size: 22px;
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* TERMINAL */
+        .terminal {
+            margin-bottom: 70px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(2, 6, 23, 0.82);
+            box-shadow: 0 25px 80px rgba(0,0,0,0.35);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 18px;
+            background: rgba(30, 41, 59, 0.6);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #475569;
+        }
+
+        .terminal-title {
+            margin-left: 10px;
+            color: #64748b;
+            font-size: 12px;
+            font-family: monospace;
+        }
+
+        .terminal-body {
+            padding: 28px;
+            font-family: "Courier New", monospace;
+            color: #94a3b8;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .green {
+            color: #4ade80;
+        }
+
+        .blue {
+            color: #38bdf8;
+        }
+
+        .purple {
+            color: #a78bfa;
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding: 30px 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-name {
+            color: #cbd5e1;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 800px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding-top: 40px;
+            }
+
+            h1 {
+                letter-spacing: -2px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 500px) {
+            nav {
+                padding: 20px 0;
+            }
+
+            .status {
+                display: none;
+            }
+
+            .hero {
+                min-height: 500px;
+            }
+
+            .terminal-body {
+                padding: 20px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+
+    <div class="container">
+
+        <!-- NAV -->
+        <nav>
+            <div class="logo">
+                <div class="logo-icon">J</div>
+                <span>JOAN TALENS</span>
+            </div>
+
+            <div class="status">
+                <span class="status-dot"></span>
+                Docker · Online
+            </div>
+        </nav>
+
+        <!-- HERO -->
+        <main>
+
+            <section class="hero">
+                <div class="hero-content">
+
+                    <div class="badge">
+                        ASIR · Implantación de Aplicaciones Web
+                    </div>
+
+                    <h1>
+                        <span>Bienvenido.</span>
+                    </h1>
+
+                    <p class="subtitle">
+                        Este servidor ha sido desplegado utilizando
+                        <strong>Docker</strong> como parte de la asignatura
+                        <strong>Implantación de Aplicaciones Web</strong>
+                        del ciclo formativo de
+                        <strong>Administración de Sistemas Informáticos en Red</strong>.
+                    </p>
+
+                </div>
+            </section>
+
+            <!-- INFO CARDS -->
+            <section class="cards">
+
+                <article class="card">
+                    <div class="card-icon">◈</div>
+                    <h2>Estudiante</h2>
+                    <p>
+                        Joan Talens<br>
+                        Administración de Sistemas Informáticos en Red
+                    </p>
+                </article>
+
+                <article class="card">
+                    <div class="card-icon">⌘</div>
+                    <h2>Tecnología</h2>
+                    <p>
+                        Aplicación web desplegada y ejecutada
+                        dentro de un contenedor Docker.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <div class="card-icon">◎</div>
+                    <h2>Ubicación</h2>
+                    <p>
+                        España<br>
+                        Implantación de Aplicaciones Web
+                    </p>
+                </article>
+
+            </section>
+
+            <!-- TERMINAL -->
+            <section class="terminal">
+
+                <div class="terminal-header">
+                    <span class="terminal-dot"></span>
+                    <span class="terminal-dot"></span>
+                    <span class="terminal-dot"></span>
+
+                    <span class="terminal-title">
+                        docker-container / index.html
+                    </span>
+                </div>
+
+                <div class="terminal-body">
+                    <div>
+                        <span class="purple">joan@asir</span>:<span class="blue">~</span>$ docker ps
+                    </div>
+
+                    <div>
+                        <span class="green">CONTAINER</span>
+                        &nbsp;&nbsp; STATUS
+                    </div>
+
+                    <div>
+                        web-server &nbsp;&nbsp;
+                        <span class="green">● UP</span>
+                    </div>
+
+                    <br>
+
+                    <div>
+                        <span class="purple">joan@asir</span>:<span class="blue">~</span>$
+                        echo "Aplicación desplegada correctamente"
+                    </div>
+
+                    <div class="green">
+                        Aplicación desplegada correctamente ✓
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-content">
+                <span>
+                    © 2026 <span class="footer-name">Joan Talens</span>
+                </span>
+
+                <span>
+                    ASIR · Implantación de Aplicaciones Web · Docker
+                </span>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
